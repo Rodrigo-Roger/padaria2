@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { Button, Form } from 'react-bootstrap'
+import { Button, Col, Form, Row } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
 import { AiOutlineCheck } from 'react-icons/ai'
 import { IoMdArrowRoundBack } from 'react-icons/io'
@@ -34,23 +34,52 @@ function form() {
           }
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="duracao">
-          <Form.Label><strong>Duração: </strong></Form.Label>
-          <Form.Control isInvalid={errors.duracao} type="text" {...register('duracao')} />
+        <Form.Group className="mb-3" controlId="cpf">
+          <Form.Label><strong>CPF: </strong></Form.Label>
+          <Form.Control isInvalid={errors.cpf} type="text" {...register('cpf')} />
           {
-            errors.duracao &&
+            errors.cpf &&
             <small>{errors.duracao.message}</small>
           }
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="modalidade">
-          <Form.Label><strong>Modalidade: </strong></Form.Label>
-          <Form.Control isInvalid={errors.modalidade} type="text" {...register('modalidade')} />
+        
+
+          <Col>
+
+            <Row md={2}>
+
+            <Form.Group className="mb-3 w-30" controlId="telefone">
+          <Form.Label><strong>Telefone: </strong></Form.Label>
+          <Form.Control isInvalid={errors.telefone} type="text" {...register('telefone')} />
           {
-            errors.modalidade &&
-            <small>{errors.modalidade.message}</small>
+            errors.telefone &&
+            <small>{errors.telefone.message}</small>
           }
         </Form.Group>
+
+        <Form.Group className="mb-3 w-20" controlId="cep" >
+          <Form.Label><strong>CEP: </strong></Form.Label>
+          <Form.Control isInvalid={errors.cep} type="text" {...register('cep')} />
+          {
+            errors.cep &&
+            <small>{errors.cep.message}</small>
+          }
+
+          
+        </Form.Group>
+
+        <Form.Group className="mb-3 w-50" controlId="endereco">
+          <Form.Label><strong>Endereço: </strong></Form.Label>
+          <Form.Control isInvalid={errors.endereco} type="text" {...register('endereco')} />
+          {
+            errors.endereco &&
+            <small>{errors.endereco.message}</small>
+          }
+        </Form.Group>
+        </Row>
+        </Col>
+        
 
         <div className='text-center'>
           <Button variant="primary" onClick={handleSubmit(salvar)}><AiOutlineCheck className="me-1"/>Salvar</Button>

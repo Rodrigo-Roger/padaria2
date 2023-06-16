@@ -37,8 +37,10 @@ function index() {
                     <tr>
                         <th>#</th>
                         <th>Nome</th>
-                        <th>Duração</th>
-                        <th>Modalidade</th>
+                        <th>CPF</th>
+                        <th>Telefone</th>
+                        <th>CEP</th>
+                        <th>Endereço</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,8 +53,11 @@ function index() {
                                 <AiOutlineDelete onClick={() => excluir(i)} />
                             </td>
                             <td>{item.nome}</td>
-                            <td>{item.duracao}</td>
-                            <td>{item.modalidade}</td>
+                            <td>{item.cpf}</td>
+                            <td>{item.telefone}</td>
+                            <td>{item.telefone}</td>
+                            <td>{item.cep}</td>
+                            <td>{item.endereco}</td>
                         </tr>
                     ))}
                 </tbody>
