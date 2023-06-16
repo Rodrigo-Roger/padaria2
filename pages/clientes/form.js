@@ -49,7 +49,7 @@ function form() {
 
             <Row md={2}>
 
-            <Form.Group className="mb-3 w-30" controlId="telefone">
+            <Form.Group className="mb-3 w-25" controlId="telefone">
           <Form.Label><strong>Telefone: </strong></Form.Label>
           <Form.Control isInvalid={errors.telefone} type="text" {...register('telefone')} />
           {
@@ -58,7 +58,7 @@ function form() {
           }
         </Form.Group>
 
-        <Form.Group className="mb-3 w-20" controlId="cep" >
+        <Form.Group className="mb-3 w-25" controlId="cep" >
           <Form.Label><strong>CEP: </strong></Form.Label>
           <Form.Control isInvalid={errors.cep} type="text" {...register('cep')} />
           {
