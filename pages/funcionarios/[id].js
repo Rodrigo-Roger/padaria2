@@ -1,32 +1,50 @@
+import Pagina from '../../components/Pagina'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Col, Form, Row } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
 import { AiOutlineCheck } from 'react-icons/ai'
 import { IoMdArrowRoundBack } from 'react-icons/io'
+import funcionariosValidator from '../../validators/funcionariosValidator'
 import InputMask from 'react-input-mask'
 
-import Pagina from '../../components/Pagina'
-import clientesValidator from '../../validators/clientesValidator'
-
 function Formulario() {
-  const { push } = useRouter()
-  const { register, handleSubmit, formState: { errors } } = useForm()
+
+  const { push, query } = useRouter()
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm()
+
+  function getAll() {
+    return JSON.parse(window.localStorage.getItem('funcionarios')) || []
+  }
+
+  useEffect(() => {
+
+    if (query.id) {
+      const funcionarios = getAll()
+      const funcionario = funcionarios[query.id]
+
+      for(let atributo in funcionario){
+        setValue(atributo, funcionario[atributo])
+      }
+    }
+
+  }, [query.id])
 
   function salvar(dados) {
-    const clientes = JSON.parse(window.localStorage.getItem('clientes')) || []
-    clientes.push(dados)
-    window.localStorage.setItem('clientes', JSON.stringify(clientes))
-    push('/clientes')
+    const funcionarios = getAll()
+    //funcionarios.push(dados)
+    funcionarios.splice(query.id, 1, dados)
+    window.localStorage.setItem('funcionarios', JSON.stringify(funcionarios))
+    push('/funcionarios')
   }
 
   return (
-    <Pagina titulo="Cadastro de Clientes">
+    <Pagina titulo="Formulário">
       <Form>
         <Form.Group className="mb-3" controlId="nome">
           <Form.Label><strong>Nome: </strong></Form.Label>
-          <Form.Control isInvalid={errors.nome} type="text" {...register('nome', clientesValidator.nome)} />
+          <Form.Control isInvalid={errors.nome} type="text" {...register('nome', funcionariosValidator.nome)} />
           {errors.nome && <small>{errors.nome.message}</small>}
         </Form.Group>
 
@@ -35,7 +53,7 @@ function Formulario() {
           <InputMask
             mask="999.999.999-99"
             maskChar=""
-            {...register('cpf', clientesValidator.cpf)}
+            {...register('cpf', funcionariosValidator.cpf)}
           >
             {(inputProps) => (
               <Form.Control
@@ -55,7 +73,7 @@ function Formulario() {
               <InputMask
                 mask="(99) 99999-9999"
                 maskChar=""
-                {...register('telefone', clientesValidator.telefone)}
+                {...register('telefone', funcionariosValidator.telefone)}
               >
                 {(inputProps) => (
                   <Form.Control
@@ -73,7 +91,7 @@ function Formulario() {
               <InputMask
                 mask="99999-999"
                 maskChar=""
-                {...register('cep', clientesValidator.cep)}
+                {...register('cep', funcionariosValidator.cep)}
               >
                 {(inputProps) => (
                   <Form.Control
@@ -88,7 +106,7 @@ function Formulario() {
 
             <Form.Group className="mb-3 w-50" controlId="endereco">
               <Form.Label><strong>Endereço: </strong></Form.Label>
-              <Form.Control isInvalid={errors.endereco} type="text" {...register('endereco', clientesValidator.endereco)} />
+              <Form.Control isInvalid={errors.endereco} type="text" {...register('endereco', funcionariosValidator.endereco)} />
               {errors.endereco && <small>{errors.endereco.message}</small>}
             </Form.Group>
           </Row>
@@ -96,7 +114,7 @@ function Formulario() {
 
         <div className='text-center'>
           <Button variant="primary" onClick={handleSubmit(salvar)}><AiOutlineCheck className="me-1" />Salvar</Button>
-          <Link href={'/clientes'} className="ms-2 btn btn-danger"><IoMdArrowRoundBack className="me-1" />Voltar</Link>
+          <Link href={'/funcionarios'} className="ms-2 btn btn-danger"><IoMdArrowRoundBack className="me-1" />Voltar</Link>
         </div>
       </Form>
     </Pagina>

@@ -1,51 +1,69 @@
+import Pagina from '../../components/Pagina'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Col, Form, Row } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
 import { AiOutlineCheck } from 'react-icons/ai'
 import { IoMdArrowRoundBack } from 'react-icons/io'
+import fornecedorsValidator from '../../validators/fornecedorsValidator'
 import InputMask from 'react-input-mask'
 
-import Pagina from '../../components/Pagina'
-import clientesValidator from '../../validators/clientesValidator'
-
 function Formulario() {
-  const { push } = useRouter()
-  const { register, handleSubmit, formState: { errors } } = useForm()
+
+  const { push, query } = useRouter()
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm()
+
+  function getAll() {
+    return JSON.parse(window.localStorage.getItem('fornecedors')) || []
+  }
+
+  useEffect(() => {
+
+    if (query.id) {
+      const fornecedors = getAll()
+      const fornecedor = fornecedors[query.id]
+
+      for(let atributo in fornecedor){
+        setValue(atributo, fornecedor[atributo])
+      }
+    }
+
+  }, [query.id])
 
   function salvar(dados) {
-    const clientes = JSON.parse(window.localStorage.getItem('clientes')) || []
-    clientes.push(dados)
-    window.localStorage.setItem('clientes', JSON.stringify(clientes))
-    push('/clientes')
+    const fornecedors = getAll()
+    //fornecedors.push(dados)
+    fornecedors.splice(query.id, 1, dados)
+    window.localStorage.setItem('fornecedors', JSON.stringify(fornecedors))
+    push('/fornecedors')
   }
 
   return (
-    <Pagina titulo="Cadastro de Clientes">
+    <Pagina titulo="Formulário">
       <Form>
         <Form.Group className="mb-3" controlId="nome">
           <Form.Label><strong>Nome: </strong></Form.Label>
-          <Form.Control isInvalid={errors.nome} type="text" {...register('nome', clientesValidator.nome)} />
+          <Form.Control isInvalid={errors.nome} type="text" {...register('nome', fornecedorsValidator.nome)} />
           {errors.nome && <small>{errors.nome.message}</small>}
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="cpf">
-          <Form.Label><strong>CPF: </strong></Form.Label>
+        <Form.Group className="mb-3" controlId="cnpj">
+          <Form.Label><strong>CNPJ: </strong></Form.Label>
           <InputMask
             mask="999.999.999-99"
             maskChar=""
-            {...register('cpf', clientesValidator.cpf)}
+            {...register('cnpj', fornecedorsValidator.cnpj)}
           >
             {(inputProps) => (
               <Form.Control
-                isInvalid={errors.cpf}
+                isInvalid={errors.cnpj}
                 type="text"
                 {...inputProps}
               />
             )}
           </InputMask>
-          {errors.cpf && <small>{errors.cpf.message}</small>}
+          {errors.cnpj && <small>{errors.cnpj.message}</small>}
         </Form.Group>
 
         <Col>
@@ -55,7 +73,7 @@ function Formulario() {
               <InputMask
                 mask="(99) 99999-9999"
                 maskChar=""
-                {...register('telefone', clientesValidator.telefone)}
+                {...register('telefone', fornecedorsValidator.telefone)}
               >
                 {(inputProps) => (
                   <Form.Control
@@ -68,35 +86,31 @@ function Formulario() {
               {errors.telefone && <small>{errors.telefone.message}</small>}
             </Form.Group>
 
-            <Form.Group className="mb-3 w-25" controlId="cep">
-              <Form.Label><strong>CEP: </strong></Form.Label>
+            <Form.Group className="mb-3 w-50" controlId="email">
+              <Form.Label><strong>EMAIL: </strong></Form.Label>
               <InputMask
                 mask="99999-999"
                 maskChar=""
-                {...register('cep', clientesValidator.cep)}
+                {...register('email', fornecedorsValidator.email)}
               >
                 {(inputProps) => (
                   <Form.Control
-                    isInvalid={errors.cep}
+                    isInvalid={errors.email}
                     type="text"
                     {...inputProps}
                   />
                 )}
               </InputMask>
-              {errors.cep && <small>{errors.cep.message}</small>}
+              {errors.email && <small>{errors.email.message}</small>}
             </Form.Group>
 
-            <Form.Group className="mb-3 w-50" controlId="endereco">
-              <Form.Label><strong>Endereço: </strong></Form.Label>
-              <Form.Control isInvalid={errors.endereco} type="text" {...register('endereco', clientesValidator.endereco)} />
-              {errors.endereco && <small>{errors.endereco.message}</small>}
-            </Form.Group>
+            
           </Row>
         </Col>
 
         <div className='text-center'>
           <Button variant="primary" onClick={handleSubmit(salvar)}><AiOutlineCheck className="me-1" />Salvar</Button>
-          <Link href={'/clientes'} className="ms-2 btn btn-danger"><IoMdArrowRoundBack className="me-1" />Voltar</Link>
+          <Link href={'/fornecedors'} className="ms-2 btn btn-danger"><IoMdArrowRoundBack className="me-1" />Voltar</Link>
         </div>
       </Form>
     </Pagina>
