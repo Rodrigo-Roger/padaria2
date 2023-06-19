@@ -1,22 +1,40 @@
+import Pagina from '../../components/Pagina'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Col, Form, Row } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
 import { AiOutlineCheck } from 'react-icons/ai'
 import { IoMdArrowRoundBack } from 'react-icons/io'
+import clientesValidator from '../../validators/clientesValidator'
 import InputMask from 'react-input-mask'
 
-import Pagina from '../../components/Pagina'
-import clientesValidator from '../../validators/clientesValidator'
-
 function Formulario() {
-  const { push } = useRouter()
-  const { register, handleSubmit, formState: { errors } } = useForm()
+
+  const { push, query } = useRouter()
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm()
+
+  function getAll() {
+    return JSON.parse(window.localStorage.getItem('clientes')) || []
+  }
+
+  useEffect(() => {
+
+    if (query.id) {
+      const clientes = getAll()
+      const cliente = clientes[query.id]
+
+      for(let atributo in cliente){
+        setValue(atributo, cliente[atributo])
+      }
+    }
+
+  }, [query.id])
 
   function salvar(dados) {
-    const clientes = JSON.parse(window.localStorage.getItem('clientes')) || []
-    clientes.push(dados)
+    const clientes = getAll()
+    //clientes.push(dados)
+    clientes.splice(query.id, 1, dados)
     window.localStorage.setItem('clientes', JSON.stringify(clientes))
     push('/clientes')
   }
