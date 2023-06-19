@@ -56,7 +56,6 @@ function index() {
                             <td>{item.cnpj}</td>
                             <td>{item.telefone}</td>
                             <td>{item.email}</td>
-                            <td>{item.endereco}</td>
                         </tr>
                     ))}
                 </tbody>

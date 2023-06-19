@@ -50,7 +50,6 @@ function Formulario() {
           </InputMask>
           {errors.cnpj && <small>{errors.cnpj.message}</small>}
         </Form.Group>
-        
             <Form.Group className="mb-3 w-25" controlId="email">
               <Form.Label><strong>EMAIL: </strong></Form.Label>
               <InputMask
