@@ -19,8 +19,8 @@ function Cabecalho() {
             <Nav.Link href="/fornecedors" style={{ fontSize: '18px', marginRight: '10px', color: '#fff' }}>
               Fornecedores
             </Nav.Link>
-            <Nav.Link href="/professores" style={{ fontSize: '18px', marginRight: '10px', color: '#fff' }}>
-              Professores
+            <Nav.Link href="/produtos" style={{ fontSize: '18px', marginRight: '10px', color: '#fff' }}>
+              Podutos
             </Nav.Link>
             <Nav.Link href="/salas" style={{ fontSize: '18px', marginRight: '10px', color: '#fff' }}>
               Salas
