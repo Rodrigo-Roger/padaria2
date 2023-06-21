@@ -1,7 +1,7 @@
 import Pagina from '../../components/Pagina'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import { Button, Table } from 'react-bootstrap'
+import { Button, Card, Table } from 'react-bootstrap'
 import { AiOutlineDelete } from 'react-icons/ai'
 import { BsFillPencilFill } from 'react-icons/bs'
 import { IoMdAddCircleOutline } from 'react-icons/io'
@@ -48,6 +48,9 @@ function index() {
                             <td>{item.validade}</td>
                             <td>{item.preco}</td>
                             <td>{item.fornecedors }</td>
+                            <td className='text-center'>
+                  <Card.Img style={{ width: '10rem' }} src={item.foto} ></Card.Img>
+                </td>
                             <td  className='text-center mr-2'>
                                 <Link href={'/produtos/' + i}>
                                     <BsFillPencilFill className="me-2 text-primary" size={20} />

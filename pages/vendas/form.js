@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Form, Row } from 'react-bootstrap';
 
 import { useForm } from 'react-hook-form';
@@ -9,8 +9,38 @@ import vendasValidator from '../../validators/vendasValidator';
 import { mask } from 'remask';
 
 function Formulario() {
-  const { push } = useRouter();
-  const { register, handleSubmit, formState: { errors }, setValue } = useForm();
+  const [produtos, setProdutos] = useState([])
+
+  const { push } = useRouter()
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm()
+
+  useEffect(() => {
+    setProdutos(getAll)
+  }, [])
+
+  function getAll() {
+    return JSON.parse(window.localStorage.getItem('produtos')) || []
+  }
+
+  const [clientes, setClientes] = useState([])
+
+  useEffect(() => {
+    setClientes(getAll)
+  }, [])
+
+  function getAll() {
+    return JSON.parse(window.localStorage.getItem('clientes')) || []
+  }
+
+  const [funcionarios, setFuncionarios] = useState([])
+
+  useEffect(() => {
+    setFuncionarios(getAll)
+  }, [])
+
+  function getAll() {
+    return JSON.parse(window.localStorage.getItem('funcionarios')) || []
+  }
 
   function salvar(dados) {
     const vendas = JSON.parse(window.localStorage.getItem('vendas')) || [];
@@ -61,23 +91,45 @@ function Formulario() {
           }
         </Form.Group>
           
-        <Form.Group className="mb-3 w-25" controlId="data">
-          <Form.Label><strong>DATA: </strong></Form.Label>
-          <Form.Control isInvalid={errors.data} type="text" mask="999.999.999-99" {...register('data', vendasValidator.data)} onChange={handleChange} />
-          {
-            errors.data&&
-            <small>{errors.data.message}</small>
-          }
-        </Form.Group>
+        <Form.Group className="mb-3">
+            <Form.Label >Produto:</Form.Label>
+            <Form.Select isInvalid={true}  {...register('produto', vendasValidator.produto)} id="produto">
+              {produtos.map(item => (
+                <option>{item.nome}</option>
+              ))}
+              {
+                errors.produto &&
+                <small>{errors.produto.message}</small>
+              }
+            </Form.Select>
+          </Form.Group>
 
-        <Form.Group className="mb-3 w-25" controlId="telefone">
-          <Form.Label><strong>Telefone: </strong></Form.Label>
-          <Form.Control isInvalid={errors.telefone} type="text" mask="(99) 99999-9999" {...register('telefone', vendasValidator.telefone)} onChange={handleChange} />
-          {
-            errors.telefone &&
-            <small>{errors.telefone.message}</small>
-          }
-        </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label >Vendedor:</Form.Label>
+            <Form.Select isInvalid={true}  {...register('funcionario', vendasValidator.funcionario)} id="funcionario">
+              {funcionarios.map(item => (
+                <option>{item.nome}</option>
+              ))}
+              {
+                errors.funcionario &&
+                <small>{errors.funcionario.message}</small>
+              }
+            </Form.Select>
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label >Cliente:</Form.Label>
+            <Form.Select isInvalid={true}  {...register('cliente', vendasValidator.cliente)} id="cliente">
+              {clientes.map(item => (
+                <option>{item.nome}</option>
+              ))}
+              {
+                errors.cliente &&
+                <small>{errors.cliente.message}</small>
+              }
+            </Form.Select>
+          </Form.Group>
+
 
           </Row>
 

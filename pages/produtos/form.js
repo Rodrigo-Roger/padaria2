@@ -105,14 +105,14 @@ function Formulario() {
             </Form.Select>
           </Form.Group>
 
-        <Form.Group className="mb-3 w-75" controlId="endereco">
-          <Form.Label><strong>ENDEREÇO: </strong></Form.Label>
-          <Form.Control isInvalid={errors.endereco} type="text" mask="AAAAAAAAAAAAAAAAAAAAAAA" {...register('endereco', produtosValidator.endereco)} onChange={handleChange} />
-          {
-            errors.endereco &&
-            <small>{errors.endereco.message}</small>
-          }
-        </Form.Group>
+          <Form.Group className="mb-3" controlId="foto">
+            <Form.Label>Foto:</Form.Label>
+            <Form.Control isInvalid={errors.foto} {...register('foto', produtosValidator.foto)} type="text" />
+            {
+              errors.foto &&
+              <small>{errors.foto.message}</small>
+            }
+          </Form.Group>
           </Row>
 
           <div className="d-flex justify-content-end">

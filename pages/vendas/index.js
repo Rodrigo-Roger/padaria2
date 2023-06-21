@@ -35,10 +35,9 @@ function index() {
                 <thead>
                     <tr>
                         <th>Valor</th>
-                        <th>DATA</th>
-                        <th>Telefone</th>
-                        <th>CEP</th>
-                        <th>Endereço</th>
+                        <th>Produto</th>
+                        <th>Total</th>
+                        
                     <th className='text-center'><Link href={'/vendas/form'}><IoMdAddCircleOutline className=" text-dark" size={30} /></Link></th>
                     </tr>
                 </thead>
@@ -46,10 +45,9 @@ function index() {
                     {vendas.map((item, i) => (
                         <tr key={i}>
                             <td>{item.valor}</td>
-                            <td>{item.data}</td>
-                            <td>{item.telefone}</td>
-                            <td>{item.cep}</td>
-                            <td>{item.endereco}</td>
+                            <td>{item.nome}</td>
+                            <td>{item.preco}</td>
+                            
                             <td  className='text-center mr-2'>
                                 <Link href={'/vendas/' + i}>
                                     <BsFillPencilFill className="me-2 text-primary" size={20} />
