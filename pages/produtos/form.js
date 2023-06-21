@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, Form, Row } from 'react-bootstrap';
-
+import { useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -9,8 +9,19 @@ import produtosValidator from '../../validators/produtosValidator';
 import { mask } from 'remask';
 
 function Formulario() {
+
+  const [fornecedors, setFornecedors] = useState([])
+
   const { push } = useRouter();
   const { register, handleSubmit, formState: { errors }, setValue } = useForm();
+
+  useEffect(() => {
+    setFornecedors(getAll)
+  }, [])
+
+  function getAll() {
+    return JSON.parse(window.localStorage.getItem('fornecedors')) || []
+  }
 
   function salvar(dados) {
     const produtos = JSON.parse(window.localStorage.getItem('produtos')) || [];
@@ -19,7 +30,7 @@ function Formulario() {
     const camposIguais = produtos.some((produto) => {
       return (
         produto.nome === dados.nome &&
-        produto.fornecedor === dados.fornecedor &&
+        produto.fornecedors === dados.fornecedors &&
         produto.endereco === dados.endereco
       );
     });
@@ -81,14 +92,18 @@ function Formulario() {
 
           <Row md={2}>
 
-        <Form.Group className="mb-3 w-25" controlId="fornecedor">
-          <Form.Label><strong>FORNECEDOR: </strong></Form.Label>
-          <Form.Control isInvalid={errors.fornecedor} type="text" mask="99999-999" {...register('fornecedor', produtosValidator.fornecedor)} onChange={handleChange} />
-          {
-            errors.fornecedor &&
-            <small>{errors.fornecedor.message}</small>
-          }
-        </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label >Fornecedor:</Form.Label>
+            <Form.Select isInvalid={true}  {...register('fornecedor', produtosValidator.fornecedor)} id="fornecedor">
+              {fornecedors.map(item => (
+                <option>{item.nome}</option>
+              ))}
+              {
+                errors.fornecedor &&
+                <small>{errors.fornecedor.message}</small>
+              }
+            </Form.Select>
+          </Form.Group>
 
         <Form.Group className="mb-3 w-75" controlId="endereco">
           <Form.Label><strong>ENDEREÇO: </strong></Form.Label>

@@ -1,6 +1,7 @@
+import Link from 'next/link';
 import React from 'react';
 import Pagina from '../components/Pagina';
-import { Link } from 'react-router-dom';
+
 
 const Inicial = () => {
   return (

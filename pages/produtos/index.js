@@ -47,7 +47,7 @@ function index() {
                             <td>{item.nome}</td>
                             <td>{item.validade}</td>
                             <td>{item.preco}</td>
-                            <td>{item.fornecedor}</td>
+                            <td>{item.fornecedors }</td>
                             <td  className='text-center mr-2'>
                                 <Link href={'/produtos/' + i}>
                                     <BsFillPencilFill className="me-2 text-primary" size={20} />
