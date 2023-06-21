@@ -1,11 +1,10 @@
-
+import Pagina from '../../components/Pagina'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { Button, Table } from 'react-bootstrap'
 import { AiOutlineDelete } from 'react-icons/ai'
 import { BsFillPencilFill } from 'react-icons/bs'
-import Pagina from '../../components/Pagina'
-
+import { IoMdAddCircleOutline } from 'react-icons/io'
 
 function index() {
 
@@ -31,31 +30,34 @@ function index() {
     return (
         <Pagina titulo="Fornecedors">
 
-            <Link href={'/fornecedors/form'}><Button variant="primary" className='m-1'>Novo</Button></Link>
+            
             <Table striped bordered hover>
                 <thead>
                     <tr>
-                        <th>#</th>
                         <th>Nome</th>
                         <th>CNPJ</th>
                         <th>Telefone</th>
                         <th>EMAIL</th>
-                        <th>Endereço</th>
+                        <th>Propeitario</th>
+                    <th className='text-center'><Link href={'/fornecedors/form'}><IoMdAddCircleOutline className=" text-dark" size={30} /></Link></th>
                     </tr>
                 </thead>
                 <tbody>
                     {fornecedors.map((item, i) => (
                         <tr key={i}>
-                            <td>
-                                <Link href={'/fornecedors/' + i}>
-                                    <BsFillPencilFill className="me-2 text-primary" />
-                                </Link>
-                                <AiOutlineDelete onClick={() => excluir(i)} />
-                            </td>
                             <td>{item.nome}</td>
                             <td>{item.cnpj}</td>
                             <td>{item.telefone}</td>
                             <td>{item.email}</td>
+                            <td>{item.propeitario}</td>
+                            <td  className='text-center mr-2'>
+                                <Link href={'/fornecedors/' + i}>
+                                    <BsFillPencilFill className="me-2 text-primary" size={20} />
+                                </Link>
+                                
+                                <AiOutlineDelete className='text-danger' size={20} onClick={() => excluir(i)} Excluir/>
+                                
+                            </td>
                         </tr>
                     ))}
                 </tbody>

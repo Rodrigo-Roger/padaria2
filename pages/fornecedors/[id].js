@@ -2,17 +2,15 @@ import Pagina from '../../components/Pagina'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
-import { Button, Col, Form, Row } from 'react-bootstrap'
+import { Button, Form, Row } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
 import { AiOutlineCheck } from 'react-icons/ai'
 import { IoMdArrowRoundBack } from 'react-icons/io'
-import fornecedorsValidator from '../../validators/fornecedorsValidator'
-import InputMask from 'react-input-mask'
 
-function Formulario() {
+function form() {
 
   const { push, query } = useRouter()
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm()
+  const { register, handleSubmit, setValue } = useForm()
 
   function getAll() {
     return JSON.parse(window.localStorage.getItem('fornecedors')) || []
@@ -40,81 +38,46 @@ function Formulario() {
   }
 
   return (
-    <Pagina titulo="Formulário">
+    <Pagina titulo="Editar">
+
       <Form>
+      <Row md={3}>
         <Form.Group className="mb-3" controlId="nome">
           <Form.Label><strong>Nome: </strong></Form.Label>
-          <Form.Control isInvalid={errors.nome} type="text" {...register('nome', fornecedorsValidator.nome)} />
-          {errors.nome && <small>{errors.nome.message}</small>}
+          <Form.Control type="text" {...register('nome')} />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="cnpj">
           <Form.Label><strong>CNPJ: </strong></Form.Label>
-          <InputMask
-            mask="999.999.999-99"
-            maskChar=""
-            {...register('cnpj', fornecedorsValidator.cnpj)}
-          >
-            {(inputProps) => (
-              <Form.Control
-                isInvalid={errors.cnpj}
-                type="text"
-                {...inputProps}
-              />
-            )}
-          </InputMask>
-          {errors.cnpj && <small>{errors.cnpj.message}</small>}
+          <Form.Control type="text" {...register('cnpj')} />
         </Form.Group>
 
-        <Col>
-          <Row md={2}>
-            <Form.Group className="mb-3 w-25" controlId="telefone">
-              <Form.Label><strong>Telefone: </strong></Form.Label>
-              <InputMask
-                mask="(99) 99999-9999"
-                maskChar=""
-                {...register('telefone', fornecedorsValidator.telefone)}
-              >
-                {(inputProps) => (
-                  <Form.Control
-                    isInvalid={errors.telefone}
-                    type="text"
-                    {...inputProps}
-                  />
-                )}
-              </InputMask>
-              {errors.telefone && <small>{errors.telefone.message}</small>}
-            </Form.Group>
+        <Form.Group className="mb-3" controlId="telefone">
+          <Form.Label><strong>TELEFONE: </strong></Form.Label>
+          <Form.Control type="text" {...register('telefone')} />
+        </Form.Group>
+        </Row>
 
-            <Form.Group className="mb-3 w-50" controlId="email">
-              <Form.Label><strong>EMAIL: </strong></Form.Label>
-              <InputMask
-                mask="99999-999"
-                maskChar=""
-                {...register('email', fornecedorsValidator.email)}
-              >
-                {(inputProps) => (
-                  <Form.Control
-                    isInvalid={errors.email}
-                    type="text"
-                    {...inputProps}
-                  />
-                )}
-              </InputMask>
-              {errors.email && <small>{errors.email.message}</small>}
-            </Form.Group>
+        <Row md={2}>
+        <Form.Group className="mb-3" controlId="email">
+          <Form.Label><strong>EMAIL: </strong></Form.Label>
+          <Form.Control type="text" {...register('email')} />
+        </Form.Group>
 
-            
-          </Row>
-        </Col>
+        <Form.Group className="mb-3" controlId="propeitario">
+          <Form.Label><strong>ENDEREÇO: </strong></Form.Label>
+          <Form.Control type="text" {...register('propeitario')} />
+        </Form.Group>
 
-        <div className='text-center'>
-          <Button variant="primary" onClick={handleSubmit(salvar)}><AiOutlineCheck className="me-1" />Salvar</Button>
-          <Link href={'/fornecedors'} className="ms-2 btn btn-danger"><IoMdArrowRoundBack className="me-1" />Voltar</Link>
-        </div>
+        </Row>
+        <div className="d-flex justify-content-end">
+          <Button variant="outline-primary" onClick={handleSubmit(salvar)}>Salvar</Button>
+          < Link href={'/fornecedors'} className="ms-2 btn btn-danger">Cancelar</Link>
+          </div>
       </Form>
+
     </Pagina>
   )
 }
 
-export default Formulario;
+export default form
