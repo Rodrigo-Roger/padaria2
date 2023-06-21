@@ -22,12 +22,10 @@ function Cabecalho() {
             <Nav.Link href="/produtos" style={{ fontSize: '18px', marginRight: '10px', color: '#fff' }}>
               Podutos
             </Nav.Link>
-            <Nav.Link href="/salas" style={{ fontSize: '18px', marginRight: '10px', color: '#fff' }}>
-              Salas
+            <Nav.Link href="/vendas" style={{ fontSize: '18px', marginRight: '10px', color: '#fff' }}>
+              Vendas
             </Nav.Link>
-            <Nav.Link href="/semestres" style={{ fontSize: '18px', marginRight: '10px', color: '#fff' }}>
-              Semestres
-            </Nav.Link>
+            
           </Nav>
         </Container>
       </Navbar>
