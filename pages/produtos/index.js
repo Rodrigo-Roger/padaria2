@@ -47,7 +47,7 @@ function index() {
                             <td>{item.nome}</td>
                             <td>{item.validade}</td>
                             <td>{item.preco}</td>
-                            <td>{item.fornecedors}</td>
+                            <td>{item.fornecedor}</td>
                             <td className='text-center'>
                   <Card.Img style={{ width: '10rem' }} src={item.foto} ></Card.Img>
                 </td>
