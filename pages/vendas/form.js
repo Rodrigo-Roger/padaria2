@@ -8,6 +8,8 @@ import vendasValidator from '../../validators/vendasValidator';
 import { mask } from 'remask';
 
 function Formulario() {
+  const [clientes, setClientes] = useState([]);
+  const [funcionarios, setFuncionarios] = useState([]);
   const [produtos, setProdutos] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [quantidades, setQuantidades] = useState({});
@@ -23,8 +25,18 @@ function Formulario() {
   } = useForm();
 
   useEffect(() => {
+    setClientes(getClientes());
+    setFuncionarios(getFuncionarios());
     setProdutos(getAll('produtos'));
   }, []);
+
+  function getClientes() {
+    return JSON.parse(window.localStorage.getItem('clientes')) || [];
+  }
+
+  function getFuncionarios() {
+    return JSON.parse(window.localStorage.getItem('funcionarios')) || [];
+  }
 
   useEffect(() => {
     setQuantidade(Object.values(quantidades).reduce((acc, curr) => acc + curr, 0));
@@ -39,40 +51,30 @@ function Formulario() {
       }
     });
     setTotal(sum);
-  }, [selectedProducts, quantidades]);
+  }, [selectedProducts, quantidades, produtos]);
 
   function getAll(key) {
     return JSON.parse(window.localStorage.getItem(key)) || [];
   }
 
   function salvar(dados) {
-    const vendas = JSON.parse(window.localStorage.getItem('vendas')) || [];
+  const vendas = JSON.parse(window.localStorage.getItem('vendas')) || [];
 
-    // Verificar se os campos já existem nos vendas cadastrados
-    const camposIguais = vendas.some(venda => {
-      return (
-        venda.valor === dados.valor &&
-        venda.data === dados.data &&
-        venda.telefone === dados.telefone &&
-        venda.cep === dados.cep &&
-        venda.endereco === dados.endereco
-      );
-    });
+  // Adicionar o novo venda ao array de vendas
+  const venda = {
+    cliente: dados.cliente,
+    funcionario: dados.funcionario,
+    produto: selectedProducts.join(', '), // Concatena os nomes dos produtos selecionados em uma única string
+    total: total.toFixed(2) // Valor total da venda formatado com duas casas decimais
+  };
 
-    if (camposIguais) {
-      // Campos duplicados encontrados, exiba uma mensagem de erro ou tome alguma ação adequada
-      console.log('Campos duplicados encontrados. Não é possível cadastrar novamente.');
-      return;
-    }
+  vendas.push(venda);
 
-    // Adicionar o novo venda ao array de vendas
-    vendas.push(dados);
+  // Armazenar o array atualizado no localStorage
+  window.localStorage.setItem('vendas', JSON.stringify(vendas));
 
-    // Armazenar o array atualizado no localStorage
-    window.localStorage.setItem('vendas', JSON.stringify(vendas));
-
-    push('/vendas');
-  }
+  push('/vendas');
+}
 
   function handleChange(event) {
     const name = event.target.name;
@@ -103,33 +105,48 @@ function Formulario() {
   return (
     <Pagina titulo="Cadastrar Venda">
       <Form>
+        <Row md={2}>
+
         <Row>
-          <Col md={6}>
-            <Form.Group className="mb-3" controlId="valor">
-              <Form.Label><strong>Valor: </strong></Form.Label>
-              <Form.Control isInvalid={errors.valor} type="text" {...register('valor', vendasValidator.valor)} />
-              {errors.valor && <small>{errors.valor.message}</small>}
+          <Col md={0}>
+            <Form.Group className="mb-3">
+              <Form.Label>Vendedor:</Form.Label>
+              <Form.Select isInvalid={errors.funcionario} {...register('funcionario', vendasValidator.funcionario)} id="funcionario">
+                {funcionarios.map(item => (
+                  <option key={item.nome}>{item.nome}</option>
+                  ))}
+              </Form.Select>
+              {errors.funcionario && <small>{errors.funcionario.message}</small>}
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Cliente:</Form.Label>
+              <Form.Select isInvalid={errors.cliente} {...register('cliente', vendasValidator.cliente)} id="cliente">
+                {clientes.map(item => (
+                  <option key={item.nome}>{item.nome}</option>
+                ))}
+              </Form.Select>
+              {errors.cliente && <small>{errors.cliente.message}</small>}
             </Form.Group>
           </Col>
         </Row>
 
         <Row>
-          <Col md={6}>
+          <Col md={0}>
             <Form.Group className="mb-3" controlId="produto">
               <Form.Label><strong>Produtos:</strong></Form.Label>
               {produtos.map(product => (
                 <div key={product.nome} className="d-flex align-items-center mb-2">
-                  <Form.Check
-                  key={product.nome}
-                  type="checkbox"
-                  label={`${product.nome} (R$ ${product.preco ? product.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'})`}
-                  name={product.nome}
-                  onChange={handleProductChange}
-                />
-
+                  <Form.Check 
+                    key={product.nome}
+                    type="checkbox"
+                    label={`${product.nome} (R$ ${product.preco ? product.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'})`}
+                    name={product.nome}
+                    onChange={handleProductChange}
+                  />
 
                   {selectedProducts.includes(product.nome) && (
-                    <Form.Control
+                    <Form.Control 
                       type="number"
                       min="0"
                       name={product.nome}
@@ -137,39 +154,19 @@ function Formulario() {
                       onChange={handleQuantidadeChange}
                       className="ms-2"
                       style={{ width: '80px' }}
-                    />
-                  )}
+                      />
+                      )}
                 </div>
               ))}
             </Form.Group>
           </Col>
         </Row>
+              </Row>
 
-        <div className="d-flex align-items-center">
-          
+        <div className="d-flex align-items-center justify-content-end pb-4">
           <span className="ms-2">Quantidade: {quantidade}</span>
           <span className="ms-2">Total: R$ {total.toFixed(2)}</span>
         </div>
-
-        <Row>
-          <Col md={6}>
-            <Form.Group className="mb-3" controlId="cep">
-              <Form.Label><strong>CEP: </strong></Form.Label>
-              <Form.Control isInvalid={errors.cep} type="text" mask="99999-999" {...register('cep', vendasValidator.cep)} onChange={handleChange} />
-              {errors.cep && <small>{errors.cep.message}</small>}
-            </Form.Group>
-          </Col>
-        </Row>
-
-        <Row>
-          <Col md={6}>
-            <Form.Group className="mb-3" controlId="endereco">
-              <Form.Label><strong>ENDEREÇO: </strong></Form.Label>
-              <Form.Control isInvalid={errors.endereco} type="text" mask="AAAAAAAAAAAAAAAAAAAAAAA" {...register('endereco', vendasValidator.endereco)} onChange={handleChange} />
-              {errors.endereco && <small>{errors.endereco.message}</small>}
-            </Form.Group>
-          </Col>
-        </Row>
 
         <div className="d-flex justify-content-end">
           <Button variant="outline-primary" className="me-2">
