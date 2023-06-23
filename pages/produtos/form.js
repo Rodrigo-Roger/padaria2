@@ -81,7 +81,7 @@ function Formulario() {
 
         <Form.Group className="mb-3 w-25" controlId="preco">
           <Form.Label><strong>Preço: </strong></Form.Label>
-          <Form.Control isInvalid={errors.preco} type="text" mask="R$ 99,99" {...register('preco', produtosValidator.preco)} onChange={handleChange} />
+          <Form.Control isInvalid={errors.preco} type="text" mask="99999999" {...register('preco', produtosValidator.preco)} onChange={handleChange} />
           {
             errors.preco &&
             <small>{errors.preco.message}</small>

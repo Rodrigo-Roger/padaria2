@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Row } from 'react-bootstrap';
-
+import { Button, Form, Row, Col } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -9,47 +8,51 @@ import vendasValidator from '../../validators/vendasValidator';
 import { mask } from 'remask';
 
 function Formulario() {
-  const [produtos, setProdutos] = useState([])
+  const [produtos, setProdutos] = useState([]);
+  const [selectedProducts, setSelectedProducts] = useState([]);
+  const [quantidades, setQuantidades] = useState({});
+  const [quantidade, setQuantidade] = useState(0);
+  const [total, setTotal] = useState(0);
 
-  const { push } = useRouter()
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm()
-
-  useEffect(() => {
-    setProdutos(getAll)
-  }, [])
-
-  function getAll() {
-    return JSON.parse(window.localStorage.getItem('produtos')) || []
-  }
-
-  const [clientes, setClientes] = useState([])
-
-  useEffect(() => {
-    setClientes(getAll)
-  }, [])
-
-  function getAll() {
-    return JSON.parse(window.localStorage.getItem('clientes')) || []
-  }
-
-  const [funcionarios, setFuncionarios] = useState([])
+  const { push } = useRouter();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors }
+  } = useForm();
 
   useEffect(() => {
-    setFuncionarios(getAll)
-  }, [])
+    setProdutos(getAll('produtos'));
+  }, []);
 
-  function getAll() {
-    return JSON.parse(window.localStorage.getItem('funcionarios')) || []
+  useEffect(() => {
+    setQuantidade(Object.values(quantidades).reduce((acc, curr) => acc + curr, 0));
+  }, [quantidades]);
+
+  useEffect(() => {
+    let sum = 0;
+    selectedProducts.forEach(productName => {
+      const product = produtos.find(item => item.nome === productName);
+      if (product) {
+        sum += product.preco * quantidades[productName];
+      }
+    });
+    setTotal(sum);
+  }, [selectedProducts, quantidades]);
+
+  function getAll(key) {
+    return JSON.parse(window.localStorage.getItem(key)) || [];
   }
 
   function salvar(dados) {
     const vendas = JSON.parse(window.localStorage.getItem('vendas')) || [];
 
     // Verificar se os campos já existem nos vendas cadastrados
-    const camposIguais = vendas.some((venda) => {
+    const camposIguais = vendas.some(venda => {
       return (
         venda.valor === dados.valor &&
-        venda.data=== dados.data&&
+        venda.data === dados.data &&
         venda.telefone === dados.telefone &&
         venda.cep === dados.cep &&
         venda.endereco === dados.endereco
@@ -78,86 +81,104 @@ function Formulario() {
     setValue(name, mask(value, mascara));
   }
 
+  const handleProductChange = event => {
+    const productName = event.target.name;
+    if (event.target.checked) {
+      setSelectedProducts([...selectedProducts, productName]);
+      setQuantidades({ ...quantidades, [productName]: 0 });
+    } else {
+      const updatedProducts = selectedProducts.filter(item => item !== productName);
+      setSelectedProducts(updatedProducts);
+      const { [productName]: _, ...updatedQuantidades } = quantidades;
+      setQuantidades(updatedQuantidades);
+    }
+  };
+
+  const handleQuantidadeChange = event => {
+    const productName = event.target.name;
+    const quantity = parseInt(event.target.value);
+    setQuantidades({ ...quantidades, [productName]: quantity });
+  };
+
   return (
     <Pagina titulo="Cadastrar Venda">
       <Form>
-        <Row md={3}>
-        <Form.Group className="mb-3 w-50" controlId="valor">
-          <Form.Label><strong>Valor: </strong></Form.Label>
-          <Form.Control isInvalid={errors.valor} type="text" {...register('valor', vendasValidator.valor)} />
-          {
-            errors.valor &&
-            <small>{errors.valor.message}</small>
-          }
-        </Form.Group>
+        <Row>
+          <Col md={6}>
+            <Form.Group className="mb-3" controlId="valor">
+              <Form.Label><strong>Valor: </strong></Form.Label>
+              <Form.Control isInvalid={errors.valor} type="text" {...register('valor', vendasValidator.valor)} />
+              {errors.valor && <small>{errors.valor.message}</small>}
+            </Form.Group>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col md={6}>
+            <Form.Group className="mb-3" controlId="produto">
+              <Form.Label><strong>Produtos:</strong></Form.Label>
+              {produtos.map(product => (
+                <div key={product.nome} className="d-flex align-items-center mb-2">
+                  <Form.Check
+                  key={product.nome}
+                  type="checkbox"
+                  label={`${product.nome} (R$ ${product.preco ? product.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'})`}
+                  name={product.nome}
+                  onChange={handleProductChange}
+                />
+
+
+                  {selectedProducts.includes(product.nome) && (
+                    <Form.Control
+                      type="number"
+                      min="0"
+                      name={product.nome}
+                      value={quantidades[product.nome] || ''}
+                      onChange={handleQuantidadeChange}
+                      className="ms-2"
+                      style={{ width: '80px' }}
+                    />
+                  )}
+                </div>
+              ))}
+            </Form.Group>
+          </Col>
+        </Row>
+
+        <div className="d-flex align-items-center">
           
-        <Form.Group className="mb-3">
-            <Form.Label >Produto:</Form.Label>
-            <Form.Select isInvalid={true}  {...register('produto', vendasValidator.produto)} id="produto">
-              {produtos.map(item => (
-                <option>{item.nome}</option>
-              ))}
-              {
-                errors.produto &&
-                <small>{errors.produto.message}</small>
-              }
-            </Form.Select>
-          </Form.Group>
+          <span className="ms-2">Quantidade: {quantidade}</span>
+          <span className="ms-2">Total: R$ {total.toFixed(2)}</span>
+        </div>
 
-          <Form.Group className="mb-3">
-            <Form.Label >Vendedor:</Form.Label>
-            <Form.Select isInvalid={true}  {...register('funcionario', vendasValidator.funcionario)} id="funcionario">
-              {funcionarios.map(item => (
-                <option>{item.nome}</option>
-              ))}
-              {
-                errors.funcionario &&
-                <small>{errors.funcionario.message}</small>
-              }
-            </Form.Select>
-          </Form.Group>
+        <Row>
+          <Col md={6}>
+            <Form.Group className="mb-3" controlId="cep">
+              <Form.Label><strong>CEP: </strong></Form.Label>
+              <Form.Control isInvalid={errors.cep} type="text" mask="99999-999" {...register('cep', vendasValidator.cep)} onChange={handleChange} />
+              {errors.cep && <small>{errors.cep.message}</small>}
+            </Form.Group>
+          </Col>
+        </Row>
 
-          <Form.Group className="mb-3">
-            <Form.Label >Cliente:</Form.Label>
-            <Form.Select isInvalid={true}  {...register('cliente', vendasValidator.cliente)} id="cliente">
-              {clientes.map(item => (
-                <option>{item.nome}</option>
-              ))}
-              {
-                errors.cliente &&
-                <small>{errors.cliente.message}</small>
-              }
-            </Form.Select>
-          </Form.Group>
+        <Row>
+          <Col md={6}>
+            <Form.Group className="mb-3" controlId="endereco">
+              <Form.Label><strong>ENDEREÇO: </strong></Form.Label>
+              <Form.Control isInvalid={errors.endereco} type="text" mask="AAAAAAAAAAAAAAAAAAAAAAA" {...register('endereco', vendasValidator.endereco)} onChange={handleChange} />
+              {errors.endereco && <small>{errors.endereco.message}</small>}
+            </Form.Group>
+          </Col>
+        </Row>
 
-
-          </Row>
-
-          <Row md={2}>
-
-        <Form.Group className="mb-3 w-25" controlId="cep">
-          <Form.Label><strong>CEP: </strong></Form.Label>
-          <Form.Control isInvalid={errors.cep} type="text" mask="99999-999" {...register('cep', vendasValidator.cep)} onChange={handleChange} />
-          {
-            errors.cep &&
-            <small>{errors.cep.message}</small>
-          }
-        </Form.Group>
-
-        <Form.Group className="mb-3 w-75" controlId="endereco">
-          <Form.Label><strong>ENDEREÇO: </strong></Form.Label>
-          <Form.Control isInvalid={errors.endereco} type="text" mask="AAAAAAAAAAAAAAAAAAAAAAA" {...register('endereco', vendasValidator.endereco)} onChange={handleChange} />
-          {
-            errors.endereco &&
-            <small>{errors.endereco.message}</small>
-          }
-        </Form.Group>
-          </Row>
-
-          <div className="d-flex justify-content-end">
-          <Button variant="outline-primary" onClick={handleSubmit(salvar)}>Salvar</Button>
-          < Link href={'/vendas'} className="ms-2 btn btn-danger">Cancelar</Link>
-          </div>
+        <div className="d-flex justify-content-end">
+          <Button variant="outline-primary" className="me-2">
+            <Link href="/vendas">Cancelar</Link>
+          </Button>
+          <Button variant="primary" onClick={handleSubmit(salvar)}>
+            Salvar
+          </Button>
+        </div>
       </Form>
     </Pagina>
   );
