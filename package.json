@@ -6,8 +6,12 @@
     "start": "next start"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.7.1",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "axios": "^1.4.0",
     "bootstrap": "^5.3.0",
+    "framer-motion": "^10.12.17",
     "next": "latest",
     "react": "18.2.0",
     "react-bootstrap": "^2.7.4",
@@ -17,6 +21,7 @@
     "react-input-mask": "^2.0.4",
     "react-number-format": "^5.2.2",
     "react-select": "^5.7.3",
-    "remask": "^1.2.2"
+    "remask": "^1.2.2",
+    "sweetalert2": "^11.7.12"
   }
 }

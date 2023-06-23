@@ -5,6 +5,7 @@ import { Button, Table } from 'react-bootstrap'
 import { AiOutlineDelete } from 'react-icons/ai'
 import { BsFillPencilFill } from 'react-icons/bs'
 import { IoMdAddCircleOutline } from 'react-icons/io'
+import Swal from 'sweetalert2'
 
 function index() {
 
@@ -15,23 +16,51 @@ function index() {
     }
 
     useEffect(() => {
-        setFuncionarios(getAll())
-    }, [])
+        setFuncionarios(getAll());
+      }, []);
 
     function excluir(id) {
-        if (confirm('Deseja realmente excluir o registro?')) {
-            const funcionarios = getAll()
-            funcionarios.splice(id, 1)
-            window.localStorage.setItem('funcionarios', JSON.stringify(funcionarios))
-            setFuncionarios(funcionarios)
-        }
-    }
+        Swal.fire({
+          title: 'Excluir registro',
+          text: 'Deseja realmente excluir o registro?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Sim',
+          cancelButtonText: 'Não',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            const funcionarios = getAll();
+            funcionarios.splice(id, 1);
+            window.localStorage.setItem('funcionarios', JSON.stringify(funcionarios));
+            setFuncionarios(funcionarios);
+            Swal.fire('Excluído!', 'O registro foi excluído com sucesso.', 'success');
+          }
+        });
+      }
+    
+      function confirmarEdicao(id) {
+        Swal.fire({
+          title: 'Editar registro',
+          text: 'Deseja realmente editar o registro?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Sim',
+          cancelButtonText: 'Não',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Redirecionar para a página de edição do funcionario com o ID específico
+            window.location.href = `/funcionarios/${id}`;
+          }
+        });
+      }
+
+
 
     return (
         <Pagina titulo="Funcionarios">
 
             
-            <Table striped bordered hover>
+            <Table striped bordered hover className='shadow'>
                 <thead>
                     <tr>
                         <th>Nome</th>
@@ -50,14 +79,22 @@ function index() {
                             <td>{item.telefone}</td>
                             <td>{item.cep}</td>
                             <td>{item.endereco}</td>
-                            <td  className='text-center mr-2'>
-                                <Link href={'/funcionarios/' + i}>
-                                    <BsFillPencilFill className="me-2 text-primary" size={20} />
-                                </Link>
-                                
-                                <AiOutlineDelete className='text-danger' size={20} onClick={() => excluir(i)} Excluir/>
-                                
-                            </td>
+                            <td className='text-center mr-2'>
+                <BsFillPencilFill
+                  className="me-2 text-primary"
+                  size={20}
+                  onClick={() => confirmarEdicao(i)}
+                  title="Editar"
+                  style={{ cursor: 'pointer' }}
+                />
+                <AiOutlineDelete
+                  className='text-danger'
+                  size={20}
+                  onClick={() => excluir(i)}
+                  title="Excluir"
+                  style={{ cursor: 'pointer' }}
+                />
+              </td>
                         </tr>
                     ))}
                 </tbody>

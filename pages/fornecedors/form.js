@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Pagina from '../../components/Pagina';
 import fornecedorsValidator from '../../validators/fornecedorsValidator';
 import { mask } from 'remask';
+import Swal from 'sweetalert2';
 
 function Formulario() {
   const { push } = useRouter();
@@ -39,6 +40,29 @@ function Formulario() {
     window.localStorage.setItem('fornecedors', JSON.stringify(fornecedors));
 
     push('/fornecedors');
+  }
+
+  function salvar(dados) {
+    Swal.fire({
+      title: 'Salvar Fornecedor',
+      text: 'Deseja realmente salvar o fornecedor?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sim',
+      cancelButtonText: 'Não'
+    }).then(result => {
+      if (result.isConfirmed) {
+        const fornecedors = JSON.parse(window.localStorage.getItem('fornecedors')) || [];
+
+        // Adicionar o novo fornecedor ao array de fornecedors
+        fornecedors.push(dados);
+
+        // Armazenar o array atualizado no localStorage
+        window.localStorage.setItem('fornecedors', JSON.stringify(fornecedors));
+
+        push('/fornecedors');
+      }
+    });
   }
 
   function handleChange(event) {
@@ -85,7 +109,7 @@ function Formulario() {
 
         <Form.Group className="mb-3 w-25" controlId="email">
           <Form.Label><strong>EMAIL: </strong></Form.Label>
-          <Form.Control isInvalid={errors.email} type="text" mask="AAAAAAAAA@AAAA.AAA" {...register('email', fornecedorsValidator.email)} onChange={handleChange} />
+          <Form.Control isInvalid={errors.email} type="text" {...register('email', fornecedorsValidator.email)} />
           {
             errors.email &&
             <small>{errors.email.message}</small>
@@ -103,7 +127,7 @@ function Formulario() {
           </Row>
 
           <div className="d-flex justify-content-end">
-          <Button variant="outline-primary" onClick={handleSubmit(salvar)}>Salvar</Button>
+          <Button variant="primary" onClick={handleSubmit(salvar)}>Salvar</Button>
           < Link href={'/fornecedors'} className="ms-2 btn btn-danger">Cancelar</Link>
           </div>
       </Form>

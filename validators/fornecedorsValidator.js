@@ -1,4 +1,4 @@
-const clientesValidator = {
+const fornecedorsValidator = {
   nome: {
     required: 'Este campo é obrigatório!',
     minLength: {
@@ -7,18 +7,7 @@ const clientesValidator = {
     },
     maxLength: {
       value: 100,
-      message: 'Para facilitar, deve ter apenas nome e sobrenome!',
-    },
-    validate: (value) => {
-      const clientes = JSON.parse(window.localStorage.getItem('clientes')) || [];
-
-      const duplicado = clientes.some((cliente) => cliente.nome === value);
-
-      if (duplicado) {
-        return 'Nome já cadastrado!';
-      }
-
-      return true;
+      message: 'se caso precisar abrevie p nome de sua empresa',
     },
   },
 
@@ -36,17 +25,7 @@ const clientesValidator = {
     value: /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/,
     message: 'Insira um CNPJ válido no formato 99.999.999/9999-99',
   },
-    validate: (value) => {
-      const clientes = JSON.parse(window.localStorage.getItem('clientes')) || [];
-
-      const duplicado = clientes.some((cliente) => cliente.cnpj === value);
-
-      if (duplicado) {
-        return 'CNPJ já cadastrado!';
-      }
-
-      return true;
-    },
+   
   },
 
   telefone: {
@@ -78,6 +57,7 @@ const clientesValidator = {
       value: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
       message: 'Insira um EMAIL válido no formato exemplo@dominio.com',
     },
+  
 
   
     validate: (value) => {
@@ -113,4 +93,4 @@ const clientesValidator = {
   },
 };
 
-export default clientesValidator;
+export default fornecedorsValidator;

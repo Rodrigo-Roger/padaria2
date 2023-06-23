@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Pagina from '../../components/Pagina';
 import vendasValidator from '../../validators/vendasValidator';
 import { mask } from 'remask';
+import Swal from 'sweetalert2';
 
 function Formulario() {
   const [clientes, setClientes] = useState([]);
@@ -58,23 +59,34 @@ function Formulario() {
   }
 
   function salvar(dados) {
-  const vendas = JSON.parse(window.localStorage.getItem('vendas')) || [];
+    Swal.fire({
+      title: 'Salvar Venda',
+      text: 'Deseja realmente salvar a venda?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sim',
+      cancelButtonText: 'Não'
+    }).then(result => {
+      if (result.isConfirmed) {
+        const vendas = JSON.parse(window.localStorage.getItem('vendas')) || [];
 
-  // Adicionar o novo venda ao array de vendas
-  const venda = {
-    cliente: dados.cliente,
-    funcionario: dados.funcionario,
-    produto: selectedProducts.join(', '), // Concatena os nomes dos produtos selecionados em uma única string
-    total: total.toFixed(2) // Valor total da venda formatado com duas casas decimais
-  };
+        // Adicionar o novo venda ao array de vendas
+        const venda = {
+          cliente: dados.cliente,
+          funcionario: dados.funcionario,
+          produto: selectedProducts.join(', '), // Concatena os nomes dos produtos selecionados em uma única string
+          total: total.toFixed(2) // Valor total da venda formatado com duas casas decimais
+        };
 
-  vendas.push(venda);
+        vendas.push(venda);
 
-  // Armazenar o array atualizado no localStorage
-  window.localStorage.setItem('vendas', JSON.stringify(vendas));
+        // Armazenar o array atualizado no localStorage
+        window.localStorage.setItem('vendas', JSON.stringify(vendas));
 
-  push('/vendas');
-}
+        push('/vendas');
+      }
+    });
+  }
 
   function handleChange(event) {
     const name = event.target.name;
@@ -105,63 +117,63 @@ function Formulario() {
   return (
     <Pagina titulo="Cadastrar Venda">
       <Form>
+        
         <Row md={2}>
-
-        <Row>
-          <Col md={0}>
-            <Form.Group className="mb-3">
-              <Form.Label>Vendedor:</Form.Label>
-              <Form.Select isInvalid={errors.funcionario} {...register('funcionario', vendasValidator.funcionario)} id="funcionario">
-                {funcionarios.map(item => (
-                  <option key={item.nome}>{item.nome}</option>
+          <Row>
+            <Col md={0}>
+              <Form.Group className="mb-3">
+                <Form.Label>Vendedor:</Form.Label>
+                <Form.Select isInvalid={errors.funcionario} {...register('funcionario', vendasValidator.funcionario)} id="funcionario">
+                  {funcionarios.map(item => (
+                    <option key={item.nome}>{item.nome}</option>
                   ))}
-              </Form.Select>
-              {errors.funcionario && <small>{errors.funcionario.message}</small>}
-            </Form.Group>
+                </Form.Select>
+                {errors.funcionario && <small>{errors.funcionario.message}</small>}
+              </Form.Group>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Cliente:</Form.Label>
-              <Form.Select isInvalid={errors.cliente} {...register('cliente', vendasValidator.cliente)} id="cliente">
-                {clientes.map(item => (
-                  <option key={item.nome}>{item.nome}</option>
-                ))}
-              </Form.Select>
-              {errors.cliente && <small>{errors.cliente.message}</small>}
-            </Form.Group>
-          </Col>
-        </Row>
+              <Form.Group className="mb-3">
+                <Form.Label>Cliente:</Form.Label>
+                <Form.Select isInvalid={errors.cliente} {...register('cliente', vendasValidator.cliente)} id="cliente">
+                  {clientes.map(item => (
+                    <option key={item.nome}>{item.nome}</option>
+                  ))}
+                </Form.Select>
+                {errors.cliente && <small>{errors.cliente.message}</small>}
+              </Form.Group>
+            </Col>
+          </Row>
 
-        <Row>
-          <Col md={0}>
-            <Form.Group className="mb-3" controlId="produto">
-              <Form.Label><strong>Produtos:</strong></Form.Label>
-              {produtos.map(product => (
-                <div key={product.nome} className="d-flex align-items-center mb-2">
-                  <Form.Check 
-                    key={product.nome}
-                    type="checkbox"
-                    label={`${product.nome} (R$ ${product.preco ? product.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'})`}
-                    name={product.nome}
-                    onChange={handleProductChange}
-                  />
-
-                  {selectedProducts.includes(product.nome) && (
-                    <Form.Control 
-                      type="number"
-                      min="0"
+          <Row>
+            <Col md={0}>
+              <Form.Group className="mb-3" controlId="produto">
+                <Form.Label><strong>Produtos:</strong></Form.Label>
+                {produtos.map(product => (
+                  <div key={product.nome} className="d-flex align-items-center mb-2">
+                    <Form.Check
+                      key={product.nome}
+                      type="checkbox"
+                      label={`${product.nome} (R$ ${product.preco ? product.preco.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'})`}
                       name={product.nome}
-                      value={quantidades[product.nome] || ''}
-                      onChange={handleQuantidadeChange}
-                      className="ms-2"
-                      style={{ width: '80px' }}
+                      onChange={handleProductChange}
+                    />
+
+                    {selectedProducts.includes(product.nome) && (
+                      <Form.Control
+                        type="number"
+                        min="0"
+                        name={product.nome}
+                        value={quantidades[product.nome] || ''}
+                        onChange={handleQuantidadeChange}
+                        className="ms-2"
+                        style={{ width: '80px' }}
                       />
-                      )}
-                </div>
-              ))}
-            </Form.Group>
-          </Col>
+                    )}
+                  </div>
+                ))}
+              </Form.Group>
+            </Col>
+          </Row>
         </Row>
-              </Row>
 
         <div className="d-flex align-items-center justify-content-end pb-4">
           <span className="ms-2">Quantidade: {quantidade}</span>
