@@ -66,7 +66,7 @@ function index() {
                         <th>CNPJ</th>
                         <th>Telefone</th>
                         <th>EMAIL</th>
-                        <th>Propeitario</th>
+                        <th>Proprietário</th>
                     <th className='text-center'><Link href={'/fornecedors/form'}><IoMdAddCircleOutline className=" text-dark" size={30} /></Link></th>
                     </tr>
                 </thead>

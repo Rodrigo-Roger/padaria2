@@ -117,8 +117,8 @@ function Formulario() {
         </Form.Group>
 
         <Form.Group className="mb-3 w-75" controlId="propeitario">
-          <Form.Label><strong>Propeitario: </strong></Form.Label>
-          <Form.Control isInvalid={errors.propeitario} type="text" {...register('propeitario', fornecedorsValidator.propeitario)} />
+          <Form.Label><strong>Proprietário: </strong></Form.Label>
+          <Form.Control isInvalid={errors.propeitario} type="text" {...register('propeitario', fornecedorsValidator.propeitario)}  />
           {
             errors.propeitario &&
             <small>{errors.propeitario.message}</small>
