@@ -1,6 +1,11 @@
+import { message } from 'antd';
+
 const clientesValidator = {
   nome: {
-    required: 'Este campo é obrigatório!',
+    required: {
+      value: true,
+      message: 'Este campo é obrigatório!',
+    },
     minLength: {
       value: 3,
       message: 'O nome deve ter no mínimo 3 letras!',
@@ -15,7 +20,8 @@ const clientesValidator = {
       const duplicado = clientes.some((cliente) => cliente.nome === value);
 
       if (duplicado) {
-        return 'Nome já cadastrado!';
+        message.error('Nome já cadastrado!');
+        return false;
       }
 
       return true;
@@ -23,7 +29,10 @@ const clientesValidator = {
   },
 
   cpf: {
-    required: 'Este campo é obrigatório!',
+    required: {
+      value: true,
+      message: 'Este campo é obrigatório!',
+    },
     maxLength: {
       value: 14,
       message: 'Insira um CPF válido!',
@@ -42,7 +51,8 @@ const clientesValidator = {
       const duplicado = clientes.some((cliente) => cliente.cpf === value);
 
       if (duplicado) {
-        return 'CPF já cadastrado!';
+        message.error('CPF já cadastrado!');
+        return false;
       }
 
       return true;
@@ -50,7 +60,10 @@ const clientesValidator = {
   },
 
   telefone: {
-    required: 'Este campo é obrigatório!',
+    required: {
+      value: true,
+      message: 'Este campo é obrigatório!',
+    },
     pattern: {
       value: /^\(?\d{2}\)?\s?\d{4,5}\-?\d{4}$/,
       message: 'Digite um número de telefone válido',
@@ -61,7 +74,8 @@ const clientesValidator = {
       const duplicado = clientes.some((cliente) => cliente.telefone === value);
 
       if (duplicado) {
-        return 'Telefone já cadastrado!';
+        message.error('Telefone já cadastrado!');
+        return false;
       }
 
       return true;
@@ -69,7 +83,10 @@ const clientesValidator = {
   },
 
   cep: {
-    required: 'Este campo é obrigatório!',
+    required: {
+      value: true,
+      message: 'Este campo é obrigatório!',
+    },
     maxLength: {
       value: 9,
       message: 'Insira um CEP válido!',
@@ -84,7 +101,8 @@ const clientesValidator = {
       const duplicado = clientes.some((cliente) => cliente.cep === value);
 
       if (duplicado) {
-        return 'CEP já cadastrado!';
+        message.error('CEP já cadastrado!');
+        return false;
       }
 
       return true;
@@ -92,7 +110,10 @@ const clientesValidator = {
   },
 
   endereco: {
-    required: 'Este campo é obrigatório!',
+    required: {
+      value: true,
+      message: 'Este campo é obrigatório!',
+    },
     maxLength: {
       value: 100,
       message: 'Insira um endereço válido!',
@@ -103,7 +124,8 @@ const clientesValidator = {
       const duplicado = clientes.some((cliente) => cliente.endereco === value);
 
       if (duplicado) {
-        return 'Endereço já cadastrado!';
+        message.error('Endereço já cadastrado!');
+        return false;
       }
 
       return true;

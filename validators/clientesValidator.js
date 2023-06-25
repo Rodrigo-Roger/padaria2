@@ -1,3 +1,5 @@
+import { notification } from 'antd';
+
 const clientesValidator = {
   nome: {
     required: 'Este campo é obrigatório!',
@@ -15,7 +17,11 @@ const clientesValidator = {
       const duplicado = clientes.some((cliente) => cliente.nome === value);
 
       if (duplicado) {
-        return 'Nome já cadastrado!';
+        notification.error({
+          message: 'Erro',
+          description: 'Nome já cadastrado!',
+        });
+        return false;
       }
 
       return true;
@@ -42,7 +48,11 @@ const clientesValidator = {
       const duplicado = clientes.some((cliente) => cliente.cpf === value);
 
       if (duplicado) {
-        return 'CPF já cadastrado!';
+        notification.error({
+          message: 'Erro',
+          description: 'CPF já cadastrado!',
+        });
+        return false;
       }
 
       return true;
@@ -61,7 +71,11 @@ const clientesValidator = {
       const duplicado = clientes.some((cliente) => cliente.telefone === value);
 
       if (duplicado) {
-        return 'Telefone já cadastrado!';
+        notification.error({
+          message: 'Erro',
+          description: 'Telefone já cadastrado!',
+        });
+        return false;
       }
 
       return true;
@@ -84,7 +98,11 @@ const clientesValidator = {
       const duplicado = clientes.some((cliente) => cliente.cep === value);
 
       if (duplicado) {
-        return 'CEP já cadastrado!';
+        notification.error({
+          message: 'Erro',
+          description: 'CEP já cadastrado!',
+        });
+        return false;
       }
 
       return true;
@@ -103,7 +121,11 @@ const clientesValidator = {
       const duplicado = clientes.some((cliente) => cliente.endereco === value);
 
       if (duplicado) {
-        return 'Endereço já cadastrado!';
+        notification.error({
+          message: 'Erro',
+          description: 'Endereço já cadastrado!',
+        });
+        return false;
       }
 
       return true;

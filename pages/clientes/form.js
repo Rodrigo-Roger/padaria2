@@ -94,7 +94,7 @@ function Formulario() {
 
         <Form.Group className="mb-3 w-75" controlId="endereco">
           <Form.Label><strong>ENDEREÇO: </strong></Form.Label>
-          <Form.Control isInvalid={errors.endereco} type="text" mask="AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" {...register('endereco', clientesValidator.endereco)} onChange={handleChange} />
+          <Form.Control isInvalid={errors.endereco} type="text" {...register('endereco', clientesValidator.endereco)}  />
           {
             errors.endereco &&
             <small>{errors.endereco.message}</small>
