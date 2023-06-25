@@ -4,37 +4,53 @@ import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 import { Button, Form, Row } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
-import { AiOutlineCheck } from 'react-icons/ai'
-import { IoMdArrowRoundBack } from 'react-icons/io'
+import Swal from 'sweetalert2'
+
 
 function form() {
 
   const { push, query } = useRouter()
   const { register, handleSubmit, setValue } = useForm()
 
-  function getAll() {
+  function getAllClientes() {
     return JSON.parse(window.localStorage.getItem('clientes')) || []
   }
 
   useEffect(() => {
-
     if (query.id) {
-      const clientes = getAll()
+      const clientes = getAllClientes()
       const cliente = clientes[query.id]
 
-      for(let atributo in cliente){
+      for (let atributo in cliente) {
         setValue(atributo, cliente[atributo])
       }
     }
-
   }, [query.id])
 
+
   function salvar(dados) {
-    const clientes = getAll()
-    //clientes.push(dados)
-    clientes.splice(query.id, 1, dados)
-    window.localStorage.setItem('clientes', JSON.stringify(clientes))
-    push('/clientes')
+    Swal.fire({
+      title: 'Salvar Alterações',
+      text: 'Deseja realmente salvar as alterações?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sim',
+      cancelButtonText: 'Não'
+    }).then(result => {
+      if (result.isConfirmed) {
+        const clientes = getAllClientes()
+        clientes.splice(query.id, 1, dados)
+        window.localStorage.setItem('clientes', JSON.stringify(clientes))
+        push('/clientes')
+      }
+    });
+  }
+
+  function handleChange(event) {
+    const name = event.target.name;
+    const value = event.target.value;
+    const mascara = event.target.getAttribute('mask');
+    setValue(name, mask(value, mascara));
   }
 
   return (
@@ -71,9 +87,9 @@ function form() {
 
         </Row>
         <div className="d-flex justify-content-end">
-          <Button variant="outline-primary" onClick={handleSubmit(salvar)}>Salvar</Button>
-          < Link href={'/clientes'} className="ms-2 btn btn-danger">Cancelar</Link>
-          </div>
+          <Button variant="primary" onClick={handleSubmit(salvar)}>Salvar</Button>
+          <Link href="/clientes" className="ms-2 btn btn-danger">Cancelar</Link>
+        </div>
       </Form>
 
     </Pagina>

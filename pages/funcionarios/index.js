@@ -1,7 +1,7 @@
 import Pagina from '../../components/Pagina'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import { Button, Table } from 'react-bootstrap'
+import { Table } from 'react-bootstrap'
 import { AiOutlineDelete } from 'react-icons/ai'
 import { BsFillPencilFill } from 'react-icons/bs'
 import { IoMdAddCircleOutline } from 'react-icons/io'

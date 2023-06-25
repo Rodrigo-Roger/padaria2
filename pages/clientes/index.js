@@ -5,6 +5,7 @@ import { Button, Table } from 'react-bootstrap'
 import { AiOutlineDelete } from 'react-icons/ai'
 import { BsFillPencilFill } from 'react-icons/bs'
 import { IoMdAddCircleOutline } from 'react-icons/io'
+import Swal from 'sweetalert2'
 
 function index() {
 
@@ -19,13 +20,40 @@ function index() {
     }, [])
 
     function excluir(id) {
-        if (confirm('Deseja realmente excluir o registro?')) {
-            const clientes = getAll()
-            clientes.splice(id, 1)
-            window.localStorage.setItem('clientes', JSON.stringify(clientes))
-            setClientes(clientes)
-        }
-    }
+        Swal.fire({
+          title: 'Excluir registro',
+          text: 'Deseja realmente excluir o registro?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Sim',
+          cancelButtonText: 'Não',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            const clientes = getAll();
+            clientes.splice(id, 1);
+            window.localStorage.setItem('clientes', JSON.stringify(clientes));
+            setClientes(clientes);
+            Swal.fire('Excluído!', 'O registro foi excluído com sucesso.', 'success');
+          }
+        });
+      }
+    
+      function confirmarEdicao(id) {
+        Swal.fire({
+          title: 'Editar registro',
+          text: 'Deseja realmente editar o registro?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Sim',
+          cancelButtonText: 'Não',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Redirecionar para a página de edição do cliente com o ID específico
+            window.location.href = `/clientes/${id}`;
+          }
+        });
+      }
+
 
     return (
         <Pagina titulo="Clientes">
@@ -50,14 +78,22 @@ function index() {
                             <td>{item.telefone}</td>
                             <td>{item.cep}</td>
                             <td>{item.endereco}</td>
-                            <td  className='text-center mr-2'>
-                                <Link href={'/clientes/' + i}>
-                                    <BsFillPencilFill className="me-2 text-primary" size={20} />
-                                </Link>
-                                
-                                <AiOutlineDelete className='text-danger' size={20} onClick={() => excluir(i)} Excluir/>
-                                
-                            </td>
+                            <td className='text-center mr-2'>
+                <BsFillPencilFill
+                  className="me-2 text-primary"
+                  size={20}
+                  onClick={() => confirmarEdicao(i)}
+                  title="Editar"
+                  style={{ cursor: 'pointer' }}
+                />
+                <AiOutlineDelete
+                  className='text-danger'
+                  size={20}
+                  onClick={() => excluir(i)}
+                  title="Excluir"
+                  style={{ cursor: 'pointer' }}
+                />
+              </td>
                         </tr>
                     ))}
                 </tbody>
