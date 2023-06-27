@@ -84,7 +84,7 @@ function form() {
 
           <Form.Group className="mb-3 w-75" controlId="endereco">
             <Form.Label><strong>Endereço: </strong></Form.Label>
-            <Form.Control isInvalid={errors.endereco} type="text" mask='AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'{...register('endereco', funcionariosValidator.endereco)} onChange={handleChange} />
+            <Form.Control isInvalid={errors.endereco} type="text"{...register('endereco', funcionariosValidator.endereco)} />
             {errors.endereco && <small>{errors.endereco.message}</small>}
           </Form.Group>
         </Row>
