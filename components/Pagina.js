@@ -10,9 +10,12 @@ function Pagina(props) {
       <div className=" py-3 text-black text-center mb-3 shadow" style={{backgroundColor:'#E4CDB8'}}>
         <Container>
           <h1 className="display-4">{props.titulo}</h1>
+          
         </Container>
       </div>
-      <Container className="mb-5 pb-4">
+      <Container className="mb-5 pb-4" >
+        
+        
         {props.children}
       </Container>
     </div>

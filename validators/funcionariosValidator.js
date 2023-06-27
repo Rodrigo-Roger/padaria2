@@ -9,7 +9,7 @@ const clientesValidator = {
     },
     maxLength: {
       value: 100,
-      message: 'Para facilitar, deve ter apenas nome e sobrenome!',
+      message: 'Para facilitar, deve ter apenas nome!',
     },
     validate: (value) => {
       const clientes = JSON.parse(window.localStorage.getItem('clientes')) || [];
@@ -92,21 +92,6 @@ const clientesValidator = {
       value: /^\d{5}-\d{3}$/,
       message: 'Insira um CEP válido no formato 99999-999',
     },
-    validate: (value) => {
-      const clientes = JSON.parse(window.localStorage.getItem('clientes')) || [];
-
-      const duplicado = clientes.some((cliente) => cliente.cep === value);
-
-      if (duplicado) {
-        notification.error({
-          message: 'Erro',
-          description: 'CEP já cadastrado!',
-        });
-        return false;
-      }
-
-      return true;
-    },
   },
 
   endereco: {
@@ -114,21 +99,6 @@ const clientesValidator = {
     maxLength: {
       value: 100,
       message: 'Insira um endereço válido!',
-    },
-    validate: (value) => {
-      const clientes = JSON.parse(window.localStorage.getItem('clientes')) || [];
-
-      const duplicado = clientes.some((cliente) => cliente.endereco === value);
-
-      if (duplicado) {
-        notification.error({
-          message: 'Erro',
-          description: 'Endereço já cadastrado!',
-        });
-        return false;
-      }
-
-      return true;
     },
   },
 };

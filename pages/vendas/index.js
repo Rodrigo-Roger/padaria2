@@ -3,7 +3,6 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { Button, Table } from 'react-bootstrap';
 import { AiOutlineDelete } from 'react-icons/ai';
-import { BsFillExclamationTriangleFill, BsFillPencilFill } from 'react-icons/bs';
 import { IoMdAddCircleOutline } from 'react-icons/io';
 import Swal from 'sweetalert2';
 
@@ -23,19 +22,6 @@ function Index() {
     const total = vendas.reduce((acc, item) => acc + item.quantidade, 0);
     setQuantidadeTotal(total);
   }, [vendas]);
-
-  function editar(id) {
-    if (vendas[id].total > 0) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Não é possível editar',
-        text: 'Não é possível editar um registro com valor total maior que zero.',
-        confirmButtonText: 'Ok'
-      });
-    } else {
-      router.push('/vendas/form?id=' + id);
-    }
-  }
 
   function excluir(id) {
     Swal.fire({
@@ -79,7 +65,6 @@ function Index() {
                 <td>{item.funcionario}</td>
                 <td>R$ {item.total}</td>
                 <td className='text-center mr-2'>
-                  <BsFillExclamationTriangleFill className="me-2 text-warning" size={20} onClick={() => editar(i)} />
                   <AiOutlineDelete className='text-danger' size={20} onClick={() => excluir(i)} title="Excluir" />
                 </td>
               </tr>

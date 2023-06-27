@@ -25,23 +25,6 @@ function Formulario() {
       if (result.isConfirmed) {
         const funcionarios = JSON.parse(window.localStorage.getItem('funcionarios')) || [];
 
-        // Verificar se os campos já existem nos funcionários cadastrados
-        const camposIguais = funcionarios.some((funcionario) => {
-          return (
-            funcionario.nome === dados.nome &&
-            funcionario.cpf === dados.cpf &&
-            funcionario.telefone === dados.telefone &&
-            funcionario.cep === dados.cep &&
-            funcionario.endereco === dados.endereco
-          );
-        });
-
-        if (camposIguais) {
-          // Campos duplicados encontrados, exibir uma mensagem de erro ou tomar alguma ação adequada
-          console.log('Campos duplicados encontrados. Não é possível cadastrar novamente.');
-          return;
-        }
-
         // Adicionar o novo funcionário ao array de funcionários
         funcionarios.push(dados);
 

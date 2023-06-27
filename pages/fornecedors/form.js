@@ -16,23 +16,6 @@ function Formulario() {
   function salvar(dados) {
     const fornecedors = JSON.parse(window.localStorage.getItem('fornecedors')) || [];
 
-    // Verificar se os campos já existem nos fornecedors cadastrados
-    const camposIguais = fornecedors.some((fornecedor) => {
-      return (
-        fornecedor.nome === dados.nome &&
-        fornecedor.cnpj === dados.cnpj &&
-        fornecedor.telefone === dados.telefone &&
-        fornecedor.email === dados.email &&
-        fornecedor.propeitario === dados.propeitario
-      );
-    });
-
-    if (camposIguais) {
-      // Campos duplicados encontrados, exiba uma mensagem de erro ou tome alguma ação adequada
-      console.log('Campos duplicados encontrados. Não é possível cadastrar novamente.');
-      return;
-    }
-
     // Adicionar o novo fornecedor ao array de fornecedors
     fornecedors.push(dados);
 
